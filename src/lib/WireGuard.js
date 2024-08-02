@@ -13,7 +13,6 @@ const {
   WG_PATH,
   WG_HOST,
   WG_PORT,
-  WG_PSK,
   WG_CONFIG_PORT,
   WG_MTU,
   WG_DEFAULT_DNS,
@@ -109,7 +108,6 @@ PreDown = ${WG_PRE_DOWN}
 PostDown = ${WG_POST_DOWN}
 `;
 
-  if (WG_PSK === 'true') {
     for (const [clientId, client] of Object.entries(config.clients)) {
       if (!client.enabled) continue;
 
@@ -121,22 +119,7 @@ PublicKey = ${client.publicKey}
 ${client.preSharedKey ? `PresharedKey = ${client.preSharedKey}\n` : ''
 }AllowedIPs = ${client.address}/32`;
     }
-  }
 
-    if (WG_PSK === 'false') {
-    for (const [clientId, client] of Object.entries(config.clients)) {
-      if (!client.enabled) continue;
-
-      result += `
-
-# Client: ${client.name} (${clientId})
-[Peer]
-PublicKey = ${client.publicKey}
-}AllowedIPs = ${client.address}/32`;
-    }
-  }
-    
-    
     debug('Config saving...');
     await fs.writeFile(path.join(WG_PATH, 'wg0.json'), JSON.stringify(config, false, 2), {
       mode: 0o660,
@@ -172,7 +155,6 @@ PublicKey = ${client.publicKey}
     }));
 
     // Loop WireGuard status
-  if (WG_PSK === 'true') {
     const dump = await Util.exec('wg show wg0 dump', {
       log: false,
     });
@@ -206,42 +188,6 @@ PublicKey = ${client.publicKey}
     return clients;
   }
 
-
-      if (WG_PSK === 'false') {
-    const dump = await Util.exec('wg show wg0 dump', {
-      log: false,
-    });
-    dump
-      .trim()
-      .split('\n')
-      .slice(1)
-      .forEach((line) => {
-        const [
-          publicKey,
-          endpoint, // eslint-disable-line no-unused-vars
-          allowedIps, // eslint-disable-line no-unused-vars
-          latestHandshakeAt,
-          transferRx,
-          transferTx,
-          persistentKeepalive,
-        ] = line.split('\t');
-
-        const client = clients.find((client) => client.publicKey === publicKey);
-        if (!client) return;
-
-        client.latestHandshakeAt = latestHandshakeAt === '0'
-          ? null
-          : new Date(Number(`${latestHandshakeAt}000`));
-        client.transferRx = Number(transferRx);
-        client.transferTx = Number(transferTx);
-        client.persistentKeepalive = persistentKeepalive;
-      });
-
-    return clients;
-  } 
-  }
-
-  
   async getClient({ clientId }) {
     const config = await this.getConfig();
     const client = config.clients[clientId];
@@ -253,7 +199,6 @@ PublicKey = ${client.publicKey}
   }
 
   async getClientConfiguration({ clientId }) {
-  if (WG_PSK === 'true') {    
     const config = await this.getConfig();
     const client = await this.getClient({ clientId });
 
@@ -271,26 +216,6 @@ ${client.preSharedKey ? `PresharedKey = ${client.preSharedKey}\n` : ''
 PersistentKeepalive = ${WG_PERSISTENT_KEEPALIVE}
 Endpoint = ${WG_HOST}:${WG_CONFIG_PORT}`;
   }
-
-  if (WG_PSK === 'false') {    
-    const config = await this.getConfig();
-    const client = await this.getClient({ clientId });
-
-    return `
-[Interface]
-PrivateKey = ${client.privateKey ? `${client.privateKey}` : 'REPLACE_ME'}
-Address = ${client.address}/24
-${WG_DEFAULT_DNS ? `DNS = ${WG_DEFAULT_DNS}\n` : ''}\
-${WG_MTU ? `MTU = ${WG_MTU}\n` : ''}\
-
-[Peer]
-PublicKey = ${config.server.publicKey}
-}AllowedIPs = ${WG_ALLOWED_IPS}
-PersistentKeepalive = ${WG_PERSISTENT_KEEPALIVE}
-Endpoint = ${WG_HOST}:${WG_CONFIG_PORT}`;
-  }
- }
-
 
   async getClientQRCodeSVG({ clientId }) {
     const config = await this.getClientConfiguration({ clientId });
@@ -331,7 +256,6 @@ Endpoint = ${WG_HOST}:${WG_CONFIG_PORT}`;
     }
 
     // Create Client
-  if (WG_PSK === 'true') {
     const id = crypto.randomUUID();
     const client = {
       id,
@@ -352,33 +276,7 @@ Endpoint = ${WG_HOST}:${WG_CONFIG_PORT}`;
     await this.saveConfig();
 
     return client;
-}
-
-
-  if (WG_PSK === 'false') {
-    const id = crypto.randomUUID();
-    const client = {
-      id,
-      name,
-      address,
-      privateKey,
-      publicKey,
-
-      createdAt: new Date(),
-      updatedAt: new Date(),
-
-      enabled: true,
-    };
-
-    config.clients[id] = client;
-
-    await this.saveConfig();
-
-    return client;
   }
-}
-
-
 
   async deleteClient({ clientId }) {
     const config = await this.getConfig();
