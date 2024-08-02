@@ -352,7 +352,6 @@ Endpoint = ${WG_HOST}:${WG_CONFIG_PORT}`;
     await this.saveConfig();
 
     return client;
-  }
 }
 
 
