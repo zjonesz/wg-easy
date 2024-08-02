@@ -109,7 +109,7 @@ PreDown = ${WG_PRE_DOWN}
 PostDown = ${WG_POST_DOWN}
 `;
 
-  if (WG_PSK === 'true') {
+  if (WG_PSK == 'true') {
     for (const [clientId, client] of Object.entries(config.clients)) {
       if (!client.enabled) continue;
 
@@ -123,7 +123,7 @@ ${client.preSharedKey ? `PresharedKey = ${client.preSharedKey}\n` : ''
     }
   }
 
-  if (WG_PSK === 'false') {
+  if (WG_PSK == 'false') {
     for (const [clientId, client] of Object.entries(config.clients)) {
       if (!client.enabled) continue;
 
@@ -172,7 +172,7 @@ PublicKey = ${client.publicKey}
     }));
 
     // Loop WireGuard status
-  if (WG_PSK === 'true') {
+  if (WG_PSK == 'true') {
     const dump = await Util.exec('wg show wg0 dump', {
       log: false,
     });
@@ -207,7 +207,7 @@ PublicKey = ${client.publicKey}
   }
 }
 
-  if (WG_PSK === 'false') {
+  if (WG_PSK == 'false') {
     const dump = await Util.exec('wg show wg0 dump', {
       log: false,
     });
@@ -252,7 +252,7 @@ PublicKey = ${client.publicKey}
   }
 
   async getClientConfiguration({ clientId }) {
-  if (WG_PSK === 'true') {    
+  if (WG_PSK == 'true') {    
     const config = await this.getConfig();
     const client = await this.getClient({ clientId });
 
@@ -272,7 +272,7 @@ Endpoint = ${WG_HOST}:${WG_CONFIG_PORT}`;
   }
  }
 
-  if (WG_PSK === 'false') {    
+  if (WG_PSK == 'false') {    
     const config = await this.getConfig();
     const client = await this.getClient({ clientId });
 
@@ -331,7 +331,7 @@ Endpoint = ${WG_HOST}:${WG_CONFIG_PORT}`;
     }
 
     // Create Client
-  if (WG_PSK === 'true') {
+  if (WG_PSK == 'true') {
     const id = crypto.randomUUID();
     const client = {
       id,
@@ -356,7 +356,7 @@ Endpoint = ${WG_HOST}:${WG_CONFIG_PORT}`;
 }
 
 
-  if (WG_PSK === 'false') {
+  if (WG_PSK == 'false') {
     const id = crypto.randomUUID();
     const client = {
       id,
