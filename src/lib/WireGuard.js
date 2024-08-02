@@ -205,9 +205,9 @@ PublicKey = ${client.publicKey}
 
     return clients;
   }
-}
 
-  if (WG_PSK === 'false') {
+
+      if (WG_PSK === 'false') {
     const dump = await Util.exec('wg show wg0 dump', {
       log: false,
     });
@@ -238,8 +238,9 @@ PublicKey = ${client.publicKey}
       });
 
     return clients;
+  } 
   }
-}
+
   
   async getClient({ clientId }) {
     const config = await this.getConfig();
@@ -252,7 +253,7 @@ PublicKey = ${client.publicKey}
   }
 
   async getClientConfiguration({ clientId }) {
-  if (WG_PSK == 'true') {    
+  if (WG_PSK === 'true') {    
     const config = await this.getConfig();
     const client = await this.getClient({ clientId });
 
@@ -272,7 +273,7 @@ Endpoint = ${WG_HOST}:${WG_CONFIG_PORT}`;
   }
  }
 
-  if (WG_PSK == 'false') {    
+  if (WG_PSK === 'false') {    
     const config = await this.getConfig();
     const client = await this.getClient({ clientId });
 
@@ -331,7 +332,7 @@ Endpoint = ${WG_HOST}:${WG_CONFIG_PORT}`;
     }
 
     // Create Client
-  if (WG_PSK == 'true') {
+  if (WG_PSK === 'true') {
     const id = crypto.randomUUID();
     const client = {
       id,
@@ -356,7 +357,7 @@ Endpoint = ${WG_HOST}:${WG_CONFIG_PORT}`;
 }
 
 
-  if (WG_PSK == 'false') {
+  if (WG_PSK === 'false') {
     const id = crypto.randomUUID();
     const client = {
       id,
