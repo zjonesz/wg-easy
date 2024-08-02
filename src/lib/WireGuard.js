@@ -109,8 +109,7 @@ PreDown = ${WG_PRE_DOWN}
 PostDown = ${WG_POST_DOWN}
 `;
 
-if (WG_PSK === 'true') {
-
+	  if (WG_PSK === 'true') {
     for (const [clientId, client] of Object.entries(config.clients)) {
       if (!client.enabled) continue;
 
@@ -122,10 +121,9 @@ PublicKey = ${client.publicKey}
 ${client.preSharedKey ? `PresharedKey = ${client.preSharedKey}\n` : ''
 }AllowedIPs = ${client.address}/32`;
     }
-	}
+		  }
 
-if (WG_PSK === 'false') {
-
+	  	  if (WG_PSK === 'false') {
     for (const [clientId, client] of Object.entries(config.clients)) {
       if (!client.enabled) continue;
 
@@ -136,7 +134,7 @@ if (WG_PSK === 'false') {
 PublicKey = ${client.publicKey}
 }AllowedIPs = ${client.address}/32`;
     }
-	}
+		  }
 
     debug('Config saving...');
     await fs.writeFile(path.join(WG_PATH, 'wg0.json'), JSON.stringify(config, false, 2), {
