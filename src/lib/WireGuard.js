@@ -271,7 +271,6 @@ ${client.preSharedKey ? `PresharedKey = ${client.preSharedKey}\n` : ''
 PersistentKeepalive = ${WG_PERSISTENT_KEEPALIVE}
 Endpoint = ${WG_HOST}:${WG_CONFIG_PORT}`;
   }
- }
 
   if (WG_PSK === 'false') {    
     const config = await this.getConfig();
